@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import useOnClickOutside from '@/common/hooks/DetectClickOutside';
-
+import colorsImg from '@/assets/colors1.svg';
 const colors = [
   '#CB4335',
   '#884EA0',
@@ -16,7 +16,11 @@ const colors = [
   '#ff6f69',
 ];
 
-const ColorPicker = ({ callback }: { callback: (arg: string) => any }) => {
+interface ColorPickerProps {
+  callback: (arg: string) => void;
+}
+
+const ColorPicker = ({ callback }: ColorPickerProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [openColors, setOpenColors] = useState(false);
   const putColor = (color: string) => {
@@ -31,7 +35,7 @@ const ColorPicker = ({ callback }: { callback: (arg: string) => any }) => {
         onClick={() => setOpenColors(!openColors)}
         className="flex p-2  rounded cursor-pointer text-white bg-black1 w-[90px]"
       >
-        <img className="w-6 mr-2" src={colorImg} alt="colors-img" />
+        <img className="w-6 mr-2" src={colorsImg} alt="colors-img" />
         Color
       </h3>
       {openColors && (

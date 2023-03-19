@@ -5,6 +5,7 @@ import Modal from '@/common/components/modal/Modal';
 import Button from '@/common/components/button/Button';
 import { useAppDispatch } from '@/store';
 import { toggleOpen } from '@/store/slices/modalSlice';
+import CreateCategory from '../create-category/CteateCategory';
 
 const ControlPanel = () => {
   const [useModal, setUseModal] = useState('');
@@ -24,7 +25,7 @@ const ControlPanel = () => {
       <ul>
         <li>
           <NavLink
-            to="/dash/home"
+            to="/dashboard/home"
             className={({ isActive }) =>
               [
                 ' w-full h-[60px] rounded-md cursor-pointer text-[#879EB1] flex justify-start items-center',
@@ -37,7 +38,7 @@ const ControlPanel = () => {
         </li>
         <li>
           <NavLink
-            to="/dash/statistic"
+            to="/dashboard/statistic"
             className={({ isActive }) =>
               [
                 'w-full h-[60px] rounded-md cursor-pointer text-[#879EB1] flex justify-start items-center',
@@ -51,14 +52,16 @@ const ControlPanel = () => {
         <li>
           <div className="mt-12 mb-2">
             {/* <MainBtn click={openNewTransaction}></MainBtn> */}
-            <Button click={() => dispatch(toggleOpen())}>fsdfdsf</Button>
+            <Button click={() => dispatch(toggleOpen())}>CreateCategory</Button>
           </div>
           <div className="">
             {/* <MainBtn click={openNewCategory}></MainBtn> */}
           </div>
         </li>
       </ul>
-      <Modal>{/* <CreateCategory /> */}fwefefwefwefwe</Modal>
+      <Modal>
+        <CreateCategory />
+      </Modal>
     </div>
   );
 };

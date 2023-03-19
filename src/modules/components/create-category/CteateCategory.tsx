@@ -4,21 +4,24 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import ColorPicker from './ui/ColorPicker';
-import ImgPicker from './ui/ImgPicker';
-import shop from '../assets/icons/shop.png';
-import { createCategory } from '../redux/slices/categoriesSlice';
+import ColorPicker from '../color-picker/ColorPicker';
+import ImgPicker from '../img-picker/ImgPicker';
+import { Input } from '@/common/components/input/Input';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
 });
+
+type FormValues = {
+  name: string;
+};
 
 const CreateCategory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [categoryImage, setCategoryImage] = useState({
     categoryColor: 'black',
-    categoryImg: shop,
+    categoryImg: '/assets/shop.png',
     type: 'expends',
   });
   const setColor = (color: any) => {
@@ -45,7 +48,7 @@ const CreateCategory = () => {
     formState: { errors },
     reset,
     watch,
-  } = useForm({
+  } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
   });
@@ -54,53 +57,36 @@ const CreateCategory = () => {
 
   async function submitCategory(data: any) {
     console.log({ ...data, ...categoryImage });
-    await dispatch(createCategory({ ...data, ...categoryImage }));
+    // await dispatch(createCategory({ ...data, ...categoryImage }));
     reset();
   }
 
   return (
-    <div className="relative pb-14 w-[275px] sm:w-[600px]">
-      <h2 className="text-2xl text-center text-gray-800 font-bold mb-6 ">
+    <div className="relative pb-14 w-full min-w-[280px] max-w-[340px]">
+      <h2 className="text-2xl text-center text-gray-800 font-bold mb-4 ">
         New category
       </h2>
-      <div className="sm:flex items-center justify-between bg-white rounded-xl p-4 shadow-xl">
-        <div className="sm:w-[210px] md:w-[265px]">
-          <h3 className="text-orange3 text-center font-bold">Appearance</h3>
+      <div className="items-center justify-between bg-white rounded-xl p-4 shadow-xl">
+        <div className="">
+          <h3 className="text-center font-bold">Appearance</h3>
           <div className="flex  justify-between">
             <ColorPicker callback={setColor} />
             <ImgPicker
               callback={setImg}
-              bgcolor={categoryImage.categoryColor}
+              bgColor={categoryImage.categoryColor}
             />
           </div>
         </div>
         <form className="" onSubmit={handleSubmit(submitCategory)}>
-          <div className="mb-6">
-            <label
-              htmlFor="name"
-              className={`block font-bold text-sm mb-2 ${
-                errors.email ? 'text-red-500' : 'text-orange3'
-              }`}
-            >
-              Category Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Example (Car)"
-              className={`block shadow text-gray-800 w-full bg-transparent outline-none border-b-2 py-2 px-4 rounded-t  placeholder-gray-400 focus:bg-orange1 ${
-                errors.email ? ' border-red-500' : ' border-orange3'
-              }`}
+          <div className="mb-6 max-w-[340px]">
+            <Input
+              label="Category Name"
+              placeholder="Category name"
               {...register('name')}
+              errorMessage={errors.name?.message}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-2">
-                A valid email is required.
-              </p>
-            )}
           </div>
-          <button className="bg-black1 shadow-xl hover:bg-[#f3961b] transition-colors duration-300 text-white rounded-lg text-lg uppercase  py-2 px-5 absolute w-fit right-1/2 translate-x-1/2 bottom-0">
+          <button className="bg-black1 shadow-xl hover:bg-[#f3961b] transition-colors duration-300 text-white rounded-lg font-semibold uppercase w-44  py-2 px-2 absolute  right-1/2 translate-x-1/2 bottom-0">
             Create category
           </button>
         </form>
@@ -109,23 +95,23 @@ const CreateCategory = () => {
           <div className="flex">
             <div
               onClick={() => setType('expends')}
-              className="flex items-center font-bold"
+              className="flex items-center font-light cursor-pointer"
             >
               <div
                 className={[
-                  'w-4 h-4 border rounded',
+                  'w-4 h-4 border rounded-full ',
                   categoryImage.type === 'expends' ? 'bg-orange3' : '',
                 ].join(' ')}
-              ></div>
+              ></div>{' '}
               Expends
             </div>
             <div
               onClick={() => setType('income')}
-              className="flex items-center ml-4 font-bold"
+              className="flex items-center ml-4  font-light cursor-pointer "
             >
               <div
                 className={[
-                  'w-4 h-4 border rounded ',
+                  'w-4 h-4 border rounded-full ',
                   categoryImage.type === 'income' ? 'bg-orange3' : '',
                 ].join(' ')}
               ></div>{' '}
@@ -135,7 +121,7 @@ const CreateCategory = () => {
         </div>
       </div>
 
-      <div className="mt-10 mx-auto w-[265px] rounded-lg bg-white p-4 shadow-xl">
+      <div className="mt-4 mx-auto w-[265px] rounded-lg bg-white p-4 shadow-xl">
         <h3 className="mb-2 text-gray-800 font-bold text-center text-lg">
           Your new category
         </h3>
