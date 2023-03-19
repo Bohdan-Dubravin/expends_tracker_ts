@@ -1,10 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import modalReducer from './slices/modalSlice';
+import userReducer from './slices/userSlice';
 import { authApi } from '@/services/AuthService';
 
 export const store = configureStore({
-  reducer: { modal: modalReducer, [authApi.reducerPath]: authApi.reducer },
+  reducer: {
+    modal: modalReducer,
+    user: userReducer,
+    [authApi.reducerPath]: authApi.reducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),
 });

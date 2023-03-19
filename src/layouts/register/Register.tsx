@@ -5,9 +5,12 @@ import { Input } from '../../common/components/input/Input';
 import { authSchema } from '../../utils/validation.schemas';
 import Loader from '@/common/components/loader/Loader';
 import { authApi } from '@/services/AuthService';
-import { AuthFormValues } from '@/types/auth';
+import { AuthFormValues } from '@/types/authInput';
+import { useAppDispatch } from '@/store';
+import { authenticate } from '@/store/slices/userSlice';
 
 const Register = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [registerUser, { isLoading, isError, isSuccess, error }] =
     authApi.useRegisterMutation();
@@ -22,8 +25,10 @@ const Register = () => {
   });
 
   async function submitLogin(values: AuthFormValues) {
-    const val = await registerUser(values);
-    console.log(val);
+    const response = await registerUser(values);
+
+    dispatch(authenticate(response.data));
+
     console.log(isError);
 
     reset();
@@ -38,9 +43,9 @@ const Register = () => {
       >
         <h1 className="text-xl text-center text-gray-700 mb-2">Register</h1>
         {isError && (
-          //@ts-ignore
+          // @ts-ignore
           <h2 className="text-center text-red-500 text-xl">
-            Error {JSON.stringify(error?.data.message)}
+            Error {error?.data.message}
           </h2>
         )}
         <div className="mb-4 ">
