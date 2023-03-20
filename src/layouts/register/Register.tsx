@@ -27,7 +27,7 @@ const Register = () => {
   async function submitLogin(values: AuthFormValues) {
     const response = await registerUser(values);
 
-    dispatch(authenticate(response.data));
+    dispatch(authenticate(response));
 
     console.log(isError);
 
