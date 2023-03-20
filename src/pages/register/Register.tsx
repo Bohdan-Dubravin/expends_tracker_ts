@@ -1,17 +1,22 @@
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Link, useNavigate } from 'react-router-dom';
-import { Input } from '../../common/components/input/Input';
-import { authSchema } from '../../utils/validation.schemas';
-import Loader from '@/common/components/loader/Loader';
-import { authApi } from '@/services/AuthService';
-import { AuthFormValues } from '@/types/authInput';
-import { useAppDispatch } from '@/store';
-import { authenticate } from '@/store/slices/userSlice';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Link, useNavigate } from "react-router-dom";
+import { Input } from "../../common/components/input/Input";
+import { authSchema } from "../../utils/validation.schemas";
+import Loader from "@/common/components/loader/Loader";
+import { authApi } from "@/services/AuthService";
+import { AuthFormValues } from "@/types/authInput";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { authenticate } from "@/store/slices/userSlice";
 
 const Register = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { id } = useAppSelector((state) => state.auth.user);
+  if (id) {
+    navigate("/dashboard/home");
+  }
+  const dispatch = useAppDispatch();
+
   const [registerUser, { isLoading, isError, isSuccess, error }] =
     authApi.useRegisterMutation();
   const {
@@ -20,16 +25,20 @@ const Register = () => {
     formState: { errors },
     reset,
   } = useForm<AuthFormValues>({
-    mode: 'onTouched',
+    mode: "onTouched",
     resolver: yupResolver(authSchema),
   });
 
   async function submitLogin(values: AuthFormValues) {
     const response = await registerUser(values);
+    console.log(response);
+    console.log(error);
 
-    dispatch(authenticate(response));
-
-    console.log(isError);
+    if (!error) {
+      //@ts-ignore
+      dispatch(authenticate(response.data));
+      navigate("/dashboard/home");
+    }
 
     reset();
     // navigate('/home');
@@ -52,7 +61,7 @@ const Register = () => {
           <Input
             label="Email"
             placeholder="yourEmail@gmail.com"
-            {...register('email')}
+            {...register("email")}
             errorMessage={errors.email?.message}
           />
         </div>
@@ -60,7 +69,7 @@ const Register = () => {
           <Input
             label="Password"
             placeholder="Your password"
-            {...register('password')}
+            {...register("password")}
             errorMessage={errors.password?.message}
           />
         </div>
@@ -70,7 +79,7 @@ const Register = () => {
         </button>
 
         <p className="text-center text-gray-700 text-xs mt-4">
-          Don`t have an account? {'   '}
+          Don`t have an account? {"   "}
           <Link className="text-orange3 hover:underline" to="/register">
             Sign up
           </Link>
